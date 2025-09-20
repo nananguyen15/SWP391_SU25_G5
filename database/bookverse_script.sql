@@ -2,6 +2,7 @@ create table authors
 (
     id     bigint auto_increment
         primary key,
+    image  tinyint      null,
     name   varchar(100) not null,
     bio    text         null,
     active tinyint      not null
@@ -12,6 +13,7 @@ create table promotions
     id            bigint auto_increment
         primary key,
     content       text        not null,
+    percentage    int         null,
     type          varchar(50) not null,
     promotion_day date        not null
 );
@@ -22,6 +24,7 @@ create table publishers
         primary key,
     name    varchar(100) not null,
     address varchar(255) null,
+    image   varchar(50)  null,
     active  tinyint      not null
 );
 
@@ -29,11 +32,11 @@ create table series
 (
     id          bigint auto_increment
         primary key,
-    name        varchar(200)                        not null,
-    description text                                null,
-    author      varchar(100)                        null,
-    created_at  timestamp default CURRENT_TIMESTAMP null,
-    updated_at  timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP
+    name        varchar(200) not null,
+    description text         null,
+    author      varchar(100) null,
+    image       varchar(50)  null,
+    active      tinyint      not null
 );
 
 create table sup_catergories
@@ -60,15 +63,16 @@ create table books
 (
     id             bigint auto_increment
         primary key,
-    category_id    bigint        null,
     title          varchar(200)  not null,
     description    text          null,
     price          double        not null,
-    stock_quantity int default 0 null,
-    published_date date          null,
-    active         tinyint       null,
     author_id      bigint        null,
     publisher_id   bigint        null,
+    category_id    bigint        null,
+    stock_quantity int default 0 null,
+    published_date date          null,
+    image          varchar(50)   null,
+    active         tinyint       null,
     constraint books_author_fk
         foreign key (author_id) references authors (id),
     constraint books_ibfk_1
@@ -94,15 +98,16 @@ create table series_books
 
 create table users
 (
-    id        varchar(36) charset utf8mb3 not null
+    id       varchar(36) charset utf8mb3 not null
         primary key,
-    username  varchar(50)                 not null,
-    email     varchar(100)                not null,
-    password  varchar(255)                not null,
-    full_name varchar(100)                null,
-    phone     varchar(20)                 null,
-    address   varchar(255)                null,
-    active    tinyint(1)                  not null comment 'Active flag for the user (soft delete when set tinyint(0))',
+    username varchar(50)                 not null,
+    password varchar(255)                not null,
+    email    varchar(100)                not null,
+    fullname varchar(100)                null,
+    phone    varchar(20)                 null,
+    address  varchar(255)                null,
+    image    varchar(50)                 null,
+    active   tinyint(1)                  not null comment 'Active flag for the user (soft delete when set tinyint(0))',
     constraint email
         unique (email),
     constraint username
@@ -136,7 +141,7 @@ create table orders
     total_amount double                                                                     not null,
     address      varchar(50) charset utf8mb3                                                null,
     created_at   timestamp                                        default CURRENT_TIMESTAMP null,
-    deleted_at   timestamp                                                                  null,
+    active       tinyint                                                                    not null,
     constraint orders_ibfk_1
         foreign key (user_id) references users (id)
 );
@@ -205,7 +210,7 @@ create table reviews
     book_id    bigint                              null,
     rating     int                                 null,
     comment    text                                null,
-    created_at timestamp default CURRENT_TIMESTAMP null,
+    created_at timestamp default CURRENT_TIMESTAMP null comment 'thay cho active',
     constraint reviews_ibfk_1
         foreign key (user_id) references users (id),
     constraint reviews_ibfk_2
