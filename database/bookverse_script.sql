@@ -2,7 +2,7 @@ create table authors
 (
     id     bigint auto_increment
         primary key,
-    image  tinyint      null,
+    image  varchar(50)  null,
     name   varchar(100) not null,
     bio    text         null,
     active tinyint      not null
@@ -54,7 +54,10 @@ create table sub_categories
     sup_cat_id  int          null,
     name        varchar(100) not null,
     description text         null,
+    discount_id bigint       not null,
     active      tinyint(1)   not null,
+    constraint sub_categories_promotions_id_fk
+        foreign key (discount_id) references promotions (id),
     constraint sub_categories_sup_catergories_id_fk
         foreign key (sup_cat_id) references sup_catergories (id)
 );
@@ -132,6 +135,19 @@ create table cart_items
 create index book_id
     on cart_items (book_id);
 
+create table notifications
+(
+    id         bigint auto_increment
+        primary key,
+    user_id    varchar(36) charset utf8mb3          not null,
+    content    text                                 not null,
+    type       varchar(50)                          null,
+    is_read    tinyint(1) default 0                 not null,
+    created_at timestamp  default CURRENT_TIMESTAMP null,
+    constraint notifications_user_fk
+        foreign key (user_id) references users (id)
+);
+
 create table orders
 (
     id           bigint auto_increment
@@ -146,34 +162,14 @@ create table orders
         foreign key (user_id) references users (id)
 );
 
-create table bills
-(
-    id           bigint auto_increment
-        primary key,
-    order_id     bigint                              null,
-    bill_number  varchar(50)                         not null,
-    total_amount decimal(12, 2)                      not null,
-    tax          double    default 0                 null,
-    created_at   timestamp default CURRENT_TIMESTAMP null,
-    deleted_at   timestamp                           null,
-    constraint bill_number
-        unique (bill_number),
-    constraint order_id
-        unique (order_id),
-    constraint bills_ibfk_1
-        foreign key (order_id) references orders (id)
-);
-
 create table order_items
 (
-    id         bigint auto_increment
+    id       bigint auto_increment
         primary key,
-    order_id   bigint                              null,
-    book_id    bigint                              null,
-    quantity   int                                 not null,
-    price      double                              null,
-    created_at timestamp default CURRENT_TIMESTAMP null,
-    deleted_at timestamp                           null,
+    order_id bigint null,
+    book_id  bigint null,
+    quantity int    not null,
+    price    double null,
     constraint order_items_ibfk_1
         foreign key (order_id) references orders (id),
     constraint order_items_ibfk_2
