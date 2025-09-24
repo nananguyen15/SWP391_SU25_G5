@@ -15,7 +15,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Byte image;
+    String image;
     @Column(nullable = false)
     String name;
     @Lob
