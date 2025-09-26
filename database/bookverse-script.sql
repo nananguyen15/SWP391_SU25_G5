@@ -117,19 +117,28 @@ create table users
         unique (username)
 );
 
+create table carts
+(
+    id      bigint auto_increment
+        primary key,
+    user_id varchar(36) charset utf8mb3 not null,
+    constraint carts_user_fk
+        foreign key (user_id) references users (id)
+);
+
 create table cart_items
 (
     id         bigint auto_increment
         primary key,
-    user_id    varchar(36) charset utf8mb3         not null,
+    cart_id    bigint                              not null,
     book_id    bigint                              null,
     quantity   int                                 not null,
     created_at timestamp default CURRENT_TIMESTAMP null,
     deleted_at timestamp                           null,
+    constraint cart_items_cart_fk
+        foreign key (cart_id) references carts (id),
     constraint cart_items_ibfk_2
-        foreign key (book_id) references books (id),
-    constraint cart_items_ibfk_3
-        foreign key (user_id) references users (id)
+        foreign key (book_id) references books (id)
 );
 
 create index book_id

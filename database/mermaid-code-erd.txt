@@ -13,10 +13,19 @@ flowchart TB
     R_GroupedUnder -- "1..N" --- SubCats
     Promotions["Promotions"] -- "1..1" --- R_DiscountedBy{"discounted_by"}
     R_DiscountedBy -- "0..N" --- SubCats
-    Series["Series"] -- "N..N" --- R_InSeries{"in_series"}
-    R_InSeries -- "N..N" --- Books
-    Users["Users"] -- "1..1" --- R_HasCartItem{"has_cart_item"} & R_Notified{"notified"} & R_Reviewed{"reviewed"} & R_Places{"places"}
-    R_HasCartItem -- "1..N" --- CartItems["Cart_Items"]
+    Series["Series"] -- "1..1" --- R_InSeries{"in_series"}
+    R_InSeries -- "1..N" --- Books
+
+    %% User - Cart relationship
+    Users["Users"] -- "1..1" --- R_HasCart{"has_cart"}
+    R_HasCart -- "1..1" --- Cart["Cart"]
+
+    %% Cart - CartItems relationship
+    Cart -- "1..N" --- R_HasCartItem{"has_cart_item"}
+    R_HasCartItem -- "0..N" --- CartItems["Cart_Items"]
+
+    %% Other existing user relationships
+    Users -- "1..1" --- R_Notified{"notified"} & R_Reviewed{"reviewed"} & R_Places{"places"}
     Books -- "1..1" --- R_InCart{"in_cart"} & R_Reviewed
     R_InCart -- "0..N" --- CartItems
     R_Notified -- "0..N" --- Notifications["Notifications"]
@@ -29,6 +38,7 @@ flowchart TB
     R_Reviewed -- "0..N" --- Reviews["Reviews"] & Users
     Users -- "1..N" --- R_HasRole{"has_role"}
     R_HasRole -- "1..1" --- Roles["Roles"]
+
      Authors:::entity
      R_Authored:::rel
      Books:::entity
@@ -43,6 +53,8 @@ flowchart TB
      Series:::entity
      R_InSeries:::rel
      Users:::entity
+     R_HasCart:::rel
+     Cart:::entity
      R_HasCartItem:::rel
      R_Notified:::rel
      R_Reviewed:::rel
@@ -58,5 +70,6 @@ flowchart TB
      Reviews:::entity
      R_HasRole:::rel
      Roles:::entity
+
     classDef entity fill:#fff,stroke:#111,stroke-width:2px,color:#111
     classDef rel fill:#fff,stroke:#111,stroke-width:2px,color:#111
