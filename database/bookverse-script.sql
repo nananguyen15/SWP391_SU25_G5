@@ -20,12 +20,10 @@ create table promotions
 
 create table publishers
 (
-    id      bigint auto_increment
+    id     bigint auto_increment
         primary key,
-    name    varchar(100) not null,
-    address varchar(255) null,
-    image   varchar(50)  null,
-    active  tinyint      not null
+    name   varchar(100) not null,
+    active tinyint      not null
 );
 
 create table series
@@ -34,7 +32,6 @@ create table series
         primary key,
     name        varchar(200) not null,
     description text         null,
-    author      varchar(100) null,
     image       varchar(50)  null,
     active      tinyint      not null
 );
@@ -119,9 +116,11 @@ create table users
 
 create table carts
 (
-    id      bigint auto_increment
+    id         bigint auto_increment
         primary key,
-    user_id varchar(36) charset utf8mb3 not null,
+    user_id    varchar(36) charset utf8mb3         not null,
+    created_at timestamp default CURRENT_TIMESTAMP null,
+    active     tinyint(1)                          not null,
     constraint carts_user_fk
         foreign key (user_id) references users (id)
 );
