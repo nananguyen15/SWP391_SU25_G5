@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2c17e49b-4d9d-428c-a697-d458ea76bcb3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +28,11 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "frontend",
+    "git-widget-placeholder": "backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
@@ -51,7 +58,7 @@
       <option name="presentableId" value="Default" />
       <updated>1746565477742</updated>
       <workItem from="1746565479671" duration="465000" />
-      <workItem from="1759330336199" duration="238000" />
+      <workItem from="1759330336199" duration="1190000" />
     </task>
     <servers />
   </component>
