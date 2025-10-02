@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/com/example/controller/CustomerProfileController.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/example/controller/CustomerProfileController.java" />
+              <option name="updatedContent" value="package com.example.controller;&#10;&#10;import com.example.dto.ChangePasswordDTO;&#10;import com.example.dto.CustomerProfileDTO;&#10;import com.example.service.CustomerProfileService;&#10;import lombok.RequiredArgsConstructor;&#10;import org.springframework.http.ResponseEntity;&#10;import org.springframework.security.core.annotation.AuthenticationPrincipal;&#10;import org.springframework.security.core.userdetails.UserDetails;&#10;import org.springframework.web.bind.annotation.*;&#10;&#10;import javax.validation.Valid;&#10;&#10;@RestController&#10;@RequestMapping(&quot;/api/customer/profile&quot;)&#10;@RequiredArgsConstructor&#10;public class CustomerProfileController {&#10;    &#10;    private final CustomerProfileService customerProfileService;&#10;    &#10;    // UC-05.1: View profile&#10;    @GetMapping&#10;    public ResponseEntity&lt;CustomerProfileDTO&gt; getProfile(@AuthenticationPrincipal UserDetails userDetails) {&#10;        try {&#10;            Long customerId = extractCustomerIdFromUserDetails(userDetails);&#10;            CustomerProfileDTO profile = customerProfileService.getCustomerProfile(customerId);&#10;            return ResponseEntity.ok(profile);&#10;        } catch (Exception e) {&#10;            return ResponseEntity.badRequest().build();&#10;        }&#10;    }&#10;    &#10;    // UC-05.2: Edit profile&#10;    @PutMapping&#10;    public ResponseEntity&lt;CustomerProfileDTO&gt; updateProfile(&#10;            @AuthenticationPrincipal UserDetails userDetails,&#10;            @Valid @RequestBody CustomerProfileDTO profileDTO) {&#10;        try {&#10;            Long customerId = extractCustomerIdFromUserDetails(userDetails);&#10;            CustomerProfileDTO updatedProfile = customerProfileService.updateCustomerProfile(customerId, profileDTO);&#10;            return ResponseEntity.ok(updatedProfile);&#10;        } catch (RuntimeException e) {&#10;            return ResponseEntity.badRequest().build();&#10;        }&#10;    }&#10;    &#10;    // UC-05.2.1: Change password&#10;    @PutMapping(&quot;/change-password&quot;)&#10;    public ResponseEntity&lt;String&gt; changePassword(&#10;            @AuthenticationPrincipal UserDetails userDetails,&#10;            @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {&#10;        try {&#10;            Long customerId = extractCustomerIdFromUserDetails(userDetails);&#10;            customerProfileService.changePassword(customerId, changePasswordDTO);&#10;            return ResponseEntity.ok(&quot;Password changed successfully&quot;);&#10;        } catch (RuntimeException e) {&#10;            return ResponseEntity.badRequest().body(e.getMessage());&#10;        }&#10;    }&#10;    &#10;    private Long extractCustomerIdFromUserDetails(UserDetails userDetails) {&#10;        // Implement logic to extract customer ID from UserDetails&#10;        // This depends on your authentication implementation&#10;        // Example: return ((CustomUserDetails) userDetails).getCustomerId();&#10;        throw new UnsupportedOperationException(&quot;Implement customer ID extraction logic&quot;);&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/example/dto/UpdateQuantityDTO.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/example/dto/UpdateQuantityDTO.java" />
+              <option name="originalContent" value="package com.example.dto;&#10;&#10;import lombok.Data;&#10;import javax.validation.constraints.NotNull;&#10;import javax.validation.constraints.Positive;&#10;&#10;@Data&#10;public class UpdateQuantityDTO {&#10;    @NotNull(message = &quot;Quantity is required&quot;)&#10;    @Positive(message = &quot;Quantity must be positive&quot;)&#10;    private Integer quantity;&#10;}&#10;" />
+              <option name="updatedContent" value="package com.example.dto;&#10;&#10;import lombok.Data;&#10;import javax.validation.constraints.NotNull;&#10;import javax.validation.constraints.Positive;&#10;&#10;@Data&#10;public class UpdateQuantityDTO {&#10;    @NotNull(message = &quot;Quantity is required&quot;)&#10;    @Positive(message = &quot;Quantity must be positive&quot;)&#10;    private Integer quantity;&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
