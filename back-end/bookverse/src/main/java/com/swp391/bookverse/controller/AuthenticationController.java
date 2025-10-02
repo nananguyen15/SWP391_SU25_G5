@@ -65,4 +65,41 @@ public class AuthenticationController {
                         .build())
                 .build();
     }
+    @PostMapping("/signup")
+    public APIResponse<String> signUp(@RequestBody @Valid SignUpRequest request) {
+        APIResponse<String> response = new APIResponse<>();
+
+        try {
+            String result = authService.signUp(request);
+            response.setResult(result);
+            response.setMessage("Success! Please check your email to verify your account.");
+        } catch (EmailAlreadyExistsException e) {
+            response.setCode(400);
+            response.setMessage("This email is already in use");
+        } catch (PasswordMismatchException e) {
+            response.setCode(400);
+            response.setMessage("Passwords do not match");
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage("An error occurred, please try again later");
+        }
+
+        return response;
+    }
+
+    @GetMapping("/verify")
+    public APIResponse<String> verifyEmail(@RequestParam String token) {
+        APIResponse<String> response = new APIResponse<>();
+
+        try {
+            authService.verifyEmail(token);
+            response.setResult("Email verified successfully");
+            response.setMessage("Your account has been verified. You can now log in.");
+        } catch (InvalidTokenException e) {
+            response.setCode(400);
+            response.setMessage("Invalid or expired verification token");
+        }
+
+        return response;
+    }
 }

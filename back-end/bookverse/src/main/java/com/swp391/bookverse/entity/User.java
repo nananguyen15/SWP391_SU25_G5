@@ -18,7 +18,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    @Column(unique = true, nullable = false)
     String username;
+    @Column(nullable = false)
     String password;
     String name;
     String email;
@@ -27,4 +29,12 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "roles")
     Set<String> roles; // Set of roles assigned to the user, e.g., "USER", "ADMIN", "MODERATOR", etc.
+    @Enumerated(EnumType.STRING)
+    private UserStatus status = UserStatus.UNVERIFIED;
+
+    private String verificationToken;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
 }

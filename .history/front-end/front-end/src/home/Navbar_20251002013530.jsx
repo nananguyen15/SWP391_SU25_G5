@@ -1,0 +1,106 @@
+import React from "react";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import bookLogo from "../assets/img/book.png";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { FaSearch } from "react-icons/fa";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import { IoNotifications, IoCart } from "react-icons/io5";
+import "../home/fonts.css"; // Import the CSS file for the custom font
+
+function BrandBookVerse() {
+  return (
+    <>
+      <Navbar className="bg-body-tertiary w-100" fixed="top">
+        <Navbar.Brand
+          href="#home"
+          style={{
+            fontFamily: "LovelyHome",
+            fontSize: "30px",
+            color: "#8B6B4C",
+            fontWeight: "1000",
+          }}
+          className="d-flex align-items-center"
+        >
+          <img
+            src={bookLogo}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="BookVerse logo"
+          />{" "}
+          BookVerse
+        </Navbar.Brand>
+        <Nav className="justify-content-center flex-grow-1">
+          <Nav.Link href="#books">Books</Nav.Link>
+          <Nav.Link href="#series">Series</Nav.Link>
+          <NavDropdown title="Categories" id="navbarScrollingDropdown">
+            <NavDropdown.Item href="#action1">Action 1</NavDropdown.Item>
+            <NavDropdown.Item href="#action2">Action 2</NavDropdown.Item>
+            <NavDropdown.Item href="#action3">Action 3</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+        <div className="position-relative" style={{ width: "300px" }}>
+          <FormControl
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            className="form-control"
+            style={{ paddingRight: "35px" }}
+          />
+          <FaSearch
+            className="position-absolute"
+            style={{
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#897f75ff",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+        <IoNotifications
+          size={24}
+          style={{
+            color: "#8B6B4C",
+            margin: "10px 10px"
+          }}
+        />
+        <IoCart
+          size={24}
+          style={{
+            color: "#8B6B4C",
+            margin: "10px 10px"
+          }}
+        />
+        <button
+          style={{
+            borderRadius: "8px",
+            width: "100px",
+            border: "1px solid #8B6B4C",
+            color: "#8B6B4C",
+            backgroundColor: "transparent",
+            marginRight: "10px",
+          }}
+        >
+          Sign up
+        </button>
+        <button
+          style={{
+            borderRadius: "8px",
+            width: "100px",
+            backgroundColor: "#8B6B4C",
+            color: "white",
+            border: "none",
+          }}
+        >
+          Login
+        </button>
+      </Navbar>
+    </>
+  );
+}
+
+export default BrandBookVerse;

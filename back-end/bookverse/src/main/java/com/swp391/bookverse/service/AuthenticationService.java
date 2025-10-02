@@ -117,4 +117,50 @@ public class AuthenticationService {
                 .valid(verified && expiryTime.after(new Date()))
                 .build();
     }
+    @Transactional
+    public String signUp(SignUpRequest request) {
+        // Validate passwords match
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new PasswordMismatchException("Passwords do not match");
+        }
+
+        // Check if email already exists
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("This email is already in use");
+        }
+
+        // Check if username already exists
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyExistsException("This username is already in use");
+        }
+
+        // Create user
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setStatus(UserStatus.UNVERIFIED);
+        user.setVerificationToken(UUID.randomUUID().toString());
+
+        try {
+            userRepository.save(user);
+
+            // Send verification email
+            emailService.sendVerificationEmail(user.getEmail(), user.getVerificationToken());
+
+            return "Account created successfully. Please check your email for verification.";
+        } catch (Exception e) {
+            throw new SystemException("Failed to create account. Please try again later.");
+        }
+    }
+
+    @Transactional
+    public void verifyEmail(String token) {
+        User user = userRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Invalid verification token"));
+
+        user.setStatus(UserStatus.VERIFIED);
+        user.setVerificationToken(null); // Clear token after verification
+        userRepository.save(user);
+    }
 }
