@@ -7,6 +7,10 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
+/**
+ * @Author huangdat
+ */
+
 @Data
 @Entity
 @Table(name = "users")
@@ -26,5 +30,5 @@ public class User {
     @ElementCollection
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "roles")
-    Set<String> roles; // Set of roles assigned to the user, e.g., "USER", "ADMIN", "MODERATOR", etc.
+    Set<String> roles;
 }

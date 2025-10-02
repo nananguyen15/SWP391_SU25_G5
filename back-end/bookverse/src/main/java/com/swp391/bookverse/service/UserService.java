@@ -47,7 +47,7 @@ public class UserService {
 
         // Set default role USER
         HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
+        roles.add(Role.CUSTOMER.name());
         user.setRoles(roles);
 
         // Save the user to the repository and return the saved entity

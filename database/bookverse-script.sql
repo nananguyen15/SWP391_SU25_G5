@@ -12,10 +12,9 @@ create table promotions
 (
     id            bigint auto_increment
         primary key,
-    content       text        not null,
-    percentage    int         null,
-    type          varchar(50) not null,
-    promotion_day date        not null
+    content       text not null,
+    percentage    int  null,
+    promotion_day date not null
 );
 
 create table publishers
