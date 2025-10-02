@@ -5,28 +5,28 @@
   font-style: normal; */
 
   font-family: 'LovelyHome';
-  src: url('/assets/font/LovelyHome-9aBZ.ttf')  format('truetype');
+  src: url('../assets/font/LovelyHome-9aBZ.ttf')  format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Belgiano Serif';
-  src: url('/assets/font/BelgianoSerif2.ttf') format('truetype');
+  src: url('../assets/font/BelgianoSerif2.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'NewYork';
-  src: url('/assets/font/NewYork.otf') format('opentype');
+  src: url('../assets/font/NewYork.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Rosemartin';
-  src: url('/assets/font/Rosemartin.otf') format('opentype');
+  src: url('../assets/font/Rosemartin.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

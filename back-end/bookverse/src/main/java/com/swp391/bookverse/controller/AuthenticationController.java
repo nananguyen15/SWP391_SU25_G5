@@ -102,4 +102,17 @@ public class AuthenticationController {
 
         return response;
     }
+
+    @PostMapping("/signin")
+    public SignInResponse signIn(@RequestBody SignInRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (user == null || !user.getPassword().equals(request.getPassword())) {
+            return new SignInResponse(false, "Incorrect email or password.");
+        }
+        if (!user.isVerified()) {
+            return new SignInResponse(false, "Please verify your email before signing in.");
+        }
+        // TODO: Generate JWT or session here
+        return new SignInResponse(true, "Sign in successful.");
+    }
 }

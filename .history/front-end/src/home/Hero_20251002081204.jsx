@@ -149,7 +149,7 @@ function Hero() {
           >
             <h1
               style={{
-                fontFamily: "Rosemartin",
+                fontFamily: "Belgiano Serif",
                 fontSize: "clamp(2.5rem, 5vw, 4rem)",
                 color: "#2c1810",
                 fontWeight: "bold",
