@@ -6,12 +6,10 @@ import java.time.LocalDateTime;
 
 /**
  * @Author: NhaNT9324W
- * Entity luu thong tin thong bao cua khach hang (UC-64, UC-65)
- * - UC-64: View customer notifications
- * - UC-65: Update customer status notification
+ * Entity map voi bang notifications (luu thong bao cua khach hang)
  */
 @Entity
-@Table(name = "customer_notifications")
+@Table(name = "notifications")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,38 +19,25 @@ public class CustomerNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Khoa chinh
+    private Long id;
 
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId; // Id cua khach hang nhan thong bao
+    // Tham chieu den user nhan thong bao
+    @Column(nullable = false)
+    private Long userId;
 
-    @Column(nullable = false, length = 200)
-    private String title; // Tieu de thong bao
+    // Noi dung thong bao
+    @Column(nullable = false, length = 500)
+    private String content;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content; // Noi dung thong bao
+    // Loai thong bao: INFO, PROMOTION...
+    @Column(nullable = false, length = 50)
+    private String type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private NotificationStatus status; // Trang thai thong bao (UNREAD, READ)
+    // Trang thai thong bao da doc hay chua
+    @Column(nullable = false)
+    private Boolean isRead = false;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt; // Thoi gian tao
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // Thoi gian cap nhat
-
-    /**
-     * Enum luu trang thai thong bao
-     */
-    public enum NotificationStatus {
-        UNREAD,
-        READ
-    }
-
-    // Them phuong thuc tien ich neu can
-    public void markAsRead() {
-        this.status = NotificationStatus.READ;
-        this.updatedAt = LocalDateTime.now();
-    }
+    // Thoi gian tao thong bao
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }

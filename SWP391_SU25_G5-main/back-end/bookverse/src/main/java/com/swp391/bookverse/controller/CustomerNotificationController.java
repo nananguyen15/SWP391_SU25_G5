@@ -1,62 +1,63 @@
 package com.swp391.bookverse.controller;
 
+import com.swp391.bookverse.dto.request.NotificationStatusRequest;
+import com.swp391.bookverse.dto.response.CustomerNotificationResponse;
 import com.swp391.bookverse.entity.CustomerNotification;
 import com.swp391.bookverse.service.CustomerNotificationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: NhaNT9324W
- * API REST cho UC-64, UC-65
- * - UC-64: View customer notifications
- * - UC-65: Update customer status notification
+ * REST Controller expose API cho thong bao cua khach hang
+ * Base mapping: /api/customer-notifications
  */
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/api/customer-notifications")
+@RequiredArgsConstructor
 public class CustomerNotificationController {
 
     private final CustomerNotificationService notificationService;
 
-    public CustomerNotificationController(CustomerNotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
-
-    /**
-     * UC-64: Lay danh sach thong bao cua khach hang
-     * GET /api/notifications?customerId={customerId}
-     */
+    // UC-64: Lay tat ca thong bao cua khach hang
     @GetMapping
-    public ResponseEntity<List<CustomerNotification>> getNotifications(@RequestParam Long customerId) {
-        List<CustomerNotification> notifications = notificationService.getNotificationsByCustomerId(customerId);
-        if (notifications.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(notifications);
+    public ResponseEntity<List<CustomerNotificationResponse>> getNotifications(@RequestParam Long userId) {
+        List<CustomerNotification> notifications = notificationService.getCustomerNotifications(userId);
+
+        List<CustomerNotificationResponse> responseList = notifications.stream()
+                .map(n -> CustomerNotificationResponse.builder()
+                        .id(n.getId())
+                        .content(n.getContent())
+                        .type(n.getType())
+                        .isRead(n.getIsRead())
+                        .createdAt(n.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseList);
     }
 
-    /**
-     * UC-65: Cap nhat trang thai 1 notification thanh READ
-     * PUT /api/notifications/{id}/read
-     */
-    @PutMapping("/{id}/read")
-    public ResponseEntity<String> markAsRead(@PathVariable Long id) {
-        boolean success = notificationService.markNotificationAsRead(id);
-        if (success) {
-            return ResponseEntity.ok("Notification marked as READ.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // UC-65: Cap nhat trang thai thong bao
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerNotificationResponse> updateNotificationStatus(
+            @PathVariable Long id,
+            @RequestParam Long userId,
+            @RequestBody NotificationStatusRequest request
+    ) {
+        CustomerNotification updated = notificationService.updateNotificationStatus(id, userId, request.getIsRead());
 
-    /**
-     * UC-65: Mark all notifications cua khach hang thanh READ
-     * PUT /api/notifications/read-all?customerId={customerId}
-     */
-    @PutMapping("/read-all")
-    public ResponseEntity<String> markAllAsRead(@RequestParam Long customerId) {
-        int updatedCount = notificationService.markAllAsRead(customerId);
-        return ResponseEntity.ok(updatedCount + " notifications marked as READ.");
+        CustomerNotificationResponse response = CustomerNotificationResponse.builder()
+                .id(updated.getId())
+                .content(updated.getContent())
+                .type(updated.getType())
+                .isRead(updated.getIsRead())
+                .createdAt(updated.getCreatedAt())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }
