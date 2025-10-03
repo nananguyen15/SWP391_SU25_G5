@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface CustomerReviewRepository extends JpaRepository<CustomerReview, Long> {
 
+    List<CustomerReview> findByCommentContainingIgnoreCase(String keyword);
+
     // Lay tat ca review cua 1 cuon sach
     List<CustomerReview> findByBookId(Long bookId);
 
