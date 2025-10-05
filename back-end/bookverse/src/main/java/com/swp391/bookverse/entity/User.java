@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,11 +24,15 @@ public class User {
     String id;
     String username;
     String password;
-    String name;
     String email;
-    LocalDate birthDate;
+    @Column(name = "fullname")
+    String name;
+    String phone;
+    String address;
+    String image;
+    boolean active;
     @ElementCollection
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "roles")
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
     Set<String> roles;
 }
