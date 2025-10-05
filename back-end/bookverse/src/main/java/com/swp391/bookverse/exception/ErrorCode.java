@@ -1,5 +1,9 @@
 package com.swp391.bookverse.exception;
 
+/**
+ * @Author huangdat
+ */
+
 public enum ErrorCode {
     // Standard HTTP error codes
     OK(200, "OK"),
