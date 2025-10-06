@@ -28,6 +28,11 @@ public enum ErrorCode {
     EMAIL_INVALID(1007, "Email must be a valid email address"),
     BIRTH_DATE_INVALID(1008, "Birth date must be in the past"),
 
+    // Series related error codes
+    SERIES_NOT_FOUND(2001, "Series not found"),
+    SERIES_EXISTS(2002, "Series already exists"),
+    NO_SERIES_STORED(2003, "No series stored in database"),
+
     INVALID_KEY(99999, "Invalid message key provided")
     ;
 
