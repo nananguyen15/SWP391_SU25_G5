@@ -22,12 +22,28 @@ public class SeriesService {
     }
 
     public Series updateSeries(Long id, Series series) {
-        // Check if series exists before updating
-        seriesRepository.findById(id)
+         // Check if series exists before updating
+        Series existingSeries = seriesRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SERIES_NOT_FOUND));
         
-        series.setId(id);
-        return seriesRepository.save(series);
+        // Update fields, keeping existing values if new ones are null
+        if (series.getName() != null) {
+            existingSeries.setName(series.getName());
+        }
+        if (series.getDescription() != null) {
+            existingSeries.setDescription(series.getDescription());
+        }
+        if (series.getAuthor() != null) {
+            existingSeries.setAuthor(series.getAuthor());
+        }
+        if (series.getImage() != null) {
+            existingSeries.setImage(series.getImage());
+        }
+        if (series.getActive() != null) {
+            existingSeries.setActive(series.getActive());
+        }
+        
+        return seriesRepository.save(existingSeries);
     }
 
     public void deleteSeries(Long id) {
