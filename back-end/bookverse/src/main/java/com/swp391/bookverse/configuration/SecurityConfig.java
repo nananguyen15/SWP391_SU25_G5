@@ -35,17 +35,17 @@ public class SecurityConfig {
 
     // Define endpoint access rules based on user roles and HTTP methods
     private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {""};
+    private final String[] PUBLIC_GET_ENDPOINTS = {"/api/book/search,/api/book/all"};
 
-    private final String[] ADMIN_GET_ENDPOINTS = {"/users"};
-    private final String[] ADMIN_POST_ENDPOINTS = {""};
-    private final String[] ADMIN_PUT_ENDPOINTS = {""};
-    private final String[] ADMIN_DELETE_ENDPOINTS = {""};
+    private final String[] ADMIN_GET_ENDPOINTS = {"/users, /api/books/admin-search, /api/book/filter, /api/book/{id} "};
+    private final String[] ADMIN_POST_ENDPOINTS = {"/api/book"};
+    private final String[] ADMIN_PUT_ENDPOINTS = {"/api/book"};
+    private final String[] ADMIN_DELETE_ENDPOINTS = {"/api/book/{id}"};
 
-    private final String[] STAFF_GET_ENDPOINTS = {""};
-    private final String[] STAFF_POST_ENDPOINTS = {""};
-    private final String[] STAFF_PUT_ENDPOINTS = {""};
-    private final String[] STAFF_DELETE_ENDPOINTS = {""};
+    private final String[] STAFF_GET_ENDPOINTS = {"/api/books/admin-search, /api/book/filter, /api/book/{id} "};
+    private final String[] STAFF_POST_ENDPOINTS = {"/api/book"};
+    private final String[] STAFF_PUT_ENDPOINTS = {"/api/book"};
+    private final String[] STAFF_DELETE_ENDPOINTS = {"/api/book/{id}"};
 
 
     /**
