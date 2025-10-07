@@ -34,13 +34,13 @@ public class SecurityConfig {
     protected String SIGNER_KEY;
 
     // Define endpoint access rules based on user roles and HTTP methods
-    private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {""};
+    private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users", "/series"};
+    private final String[] PUBLIC_GET_ENDPOINTS = {"/series", "/series/*", "/series/search/*"};
 
     private final String[] ADMIN_GET_ENDPOINTS = {"/users"};
     private final String[] ADMIN_POST_ENDPOINTS = {""};
-    private final String[] ADMIN_PUT_ENDPOINTS = {""};
-    private final String[] ADMIN_DELETE_ENDPOINTS = {""};
+    private final String[] ADMIN_PUT_ENDPOINTS = {"/series/**"};
+    private final String[] ADMIN_DELETE_ENDPOINTS = {"/series/**"};
 
     private final String[] STAFF_GET_ENDPOINTS = {""};
     private final String[] STAFF_POST_ENDPOINTS = {""};
@@ -61,7 +61,10 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request ->
                 request
                         .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, ADMIN_DELETE_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 
         // Configure ability to use form login and basic authentication
