@@ -24,8 +24,11 @@ public class Book {
     @Column(nullable = false)
     String title;
 
-    @Lob
+//    @Lob
+    @Column(length = 4000)
     String description;
+
+
 
     @Column(nullable = false)
     Double price;

@@ -28,6 +28,11 @@ public enum ErrorCode {
     EMAIL_INVALID(1007, "Email must be a valid email address"),
     BIRTH_DATE_INVALID(1008, "Birth date must be in the past"),
 
+    // -- Lỗi liên quan đến Category (SubCategory/SuperCategory) --
+    CATEGORY_NOT_FOUND(2001, "Category not found"),
+    SUPER_CATEGORY_NOT_FOUND(2002, "Super Category not found or invalid ID"),
+    CATEGORY_NAME_DUPLICATE(2003, "Category name already exists"),
+
     INVALID_KEY(99999, "Invalid message key provided")
     ;
 
