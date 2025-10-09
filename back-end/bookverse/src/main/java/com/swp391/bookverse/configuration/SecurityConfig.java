@@ -34,19 +34,19 @@ public class SecurityConfig {
     protected String SIGNER_KEY;
 
     // Define endpoint access rules based on user roles and HTTP methods
-    private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {"/api/book/search,/api/book/all"};
+    private final String[] PUBCLIC_POST_ENDPOINTS = { "/auth/token", "/auth/introspect", "/users" };
+    private final String[] PUBLIC_GET_ENDPOINTS = { "/api/book/search", "/api/book/all" };
 
-    private final String[] ADMIN_GET_ENDPOINTS = {"/users, /api/books/admin-search, /api/book/filter, /api/book/{id} "};
-    private final String[] ADMIN_POST_ENDPOINTS = {"/api/book"};
-    private final String[] ADMIN_PUT_ENDPOINTS = {"/api/book"};
-    private final String[] ADMIN_DELETE_ENDPOINTS = {"/api/book/{id}"};
+    private final String[] ADMIN_GET_ENDPOINTS = { "/users", "/api/books/admin-search", "/api/book/filter",
+            "/api/book/{id}" };
+    private final String[] ADMIN_POST_ENDPOINTS = { "/api/book" };
+    private final String[] ADMIN_PUT_ENDPOINTS = { "/api/book/*" };
+    private final String[] ADMIN_DELETE_ENDPOINTS = { "/api/book/*" };
 
-    private final String[] STAFF_GET_ENDPOINTS = {"/api/books/admin-search, /api/book/filter, /api/book/{id} "};
-    private final String[] STAFF_POST_ENDPOINTS = {"/api/book"};
-    private final String[] STAFF_PUT_ENDPOINTS = {"/api/book"};
-    private final String[] STAFF_DELETE_ENDPOINTS = {"/api/book/{id}"};
-
+    private final String[] STAFF_GET_ENDPOINTS = { "/api/books/admin-search", "/api/book/filter", "/api/book/{id}" };
+    private final String[] STAFF_POST_ENDPOINTS = { "/api/book" };
+    private final String[] STAFF_PUT_ENDPOINTS = { "/api/book/*" };
+    private final String[] STAFF_DELETE_ENDPOINTS = { "/api/book/*" };
 
     /**
      * Configures the security filter chain for the application.
@@ -57,17 +57,28 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        // Configure endpoints and their access rules. If endpoints are not specified, all requests are authenticated by default.
-        httpSecurity.authorizeHttpRequests(request ->
-                request
-                        .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated());
+        // Configure endpoints and their access rules. If endpoints are not specified,
+        // all requests are authenticated by default.
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
+                // Thêm
+                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+                .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                // thêm
+                .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.DELETE, ADMIN_DELETE_ENDPOINTS)
+                .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.GET, STAFF_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.POST, STAFF_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.PUT, STAFF_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                .requestMatchers(HttpMethod.DELETE, STAFF_DELETE_ENDPOINTS)
+                .hasAnyAuthority("SCOPE_ADMIN", "SCOPE_STAFF")
+                // If not matched by any rules above, all other endpoints require authentication
+                .anyRequest().authenticated());
 
         // Configure ability to use form login and basic authentication
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
-        );
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())));
 
         // Disable CSRF protection for simplicity in this example.
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
