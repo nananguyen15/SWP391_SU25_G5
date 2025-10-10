@@ -2,6 +2,7 @@ package com.swp391.bookverse.repository;
 
 import com.swp391.bookverse.entity.CustomerReview;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor; // <-- THÊM IMPORT NÀY
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +11,12 @@ import java.util.Optional;
  * @Author: NhaNT9324W
  * @CreatedDate: 2025-10-08
  * @Description: Repository interface for managing CustomerReview entities.
- *                Provides custom query methods for retrieving and verifying customer reviews.
+ * Provides standard CRUD operations, custom queries, and support
+ * for dynamic specification-based queries for admin filtering.
  * @Package: com.swp391.bookverse.repository
  */
 @Repository
-public interface CustomerReviewRepository extends JpaRepository<CustomerReview, Long> {
+public interface CustomerReviewRepository extends JpaRepository<CustomerReview, Long>, JpaSpecificationExecutor<CustomerReview> {
 
     /**
      * Retrieve all reviews created by a specific customer.

@@ -3,7 +3,6 @@ package com.swp391.bookverse.exception;
 /**
  * @Author huangdat
  */
-
 public enum ErrorCode {
     // Standard HTTP error codes
     OK(200, "OK"),
@@ -16,6 +15,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
     SERVICE_UNAVAILABLE(503, "Service Unavailable"),
 
+
     // Custom error codes for the application
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception occurred"),
     USER_EXISTS(1001, "User already exists"),
@@ -27,6 +27,9 @@ public enum ErrorCode {
     NAME_INVALID(1006, "Name must be at least 3 characters long"),
     EMAIL_INVALID(1007, "Email must be a valid email address"),
     BIRTH_DATE_INVALID(1008, "Birth date must be in the past"),
+
+    REVIEW_NOT_FOUND(1009, "Review not found"), // Error of review
+    PROMOTION_NOT_FOUND(1010, "Promotion not found"),
 
     INVALID_KEY(99999, "Invalid message key provided")
     ;
@@ -46,5 +49,4 @@ public enum ErrorCode {
     public String getMessage() {
         return message;
     }
-
 }
