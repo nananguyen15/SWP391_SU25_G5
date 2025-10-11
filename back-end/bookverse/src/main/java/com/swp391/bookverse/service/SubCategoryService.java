@@ -1,17 +1,19 @@
 package com.swp391.bookverse.service;
 
+import com.swp391.bookverse.dto.response.CategoryResponse;
 import com.swp391.bookverse.entity.SubCategory;
 import com.swp391.bookverse.repository.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @Author nhung
  */
-
 
 @Service
 public class SubCategoryService {
@@ -19,55 +21,87 @@ public class SubCategoryService {
     @Autowired
     private SubCategoryRepository categoryRepository;
 
-    // Lấy tất cả Category
+    // Lấy tất cả Category (entity)
     @Transactional(readOnly = true)
     public List<SubCategory> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    // Lấy Category theo ID
+    // Lấy tất cả Category (DTO)
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> getAllCategoryResponses() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    // Lấy Category theo ID (entity)
     @Transactional(readOnly = true)
     public Optional<SubCategory> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
 
-    // Thêm mới hoặc Cập nhật (nếu ID tồn tại)
+    // Lấy Category theo ID (DTO)
+    @Transactional(readOnly = true)
+    public Optional<CategoryResponse> getCategoryResponseById(Long id) {
+        return categoryRepository.findById(id).map(CategoryResponse::from);
+    }
+
+    // Thêm mới hoặc Cập nhật (nếu ID tồn tại) - trả entity
     @Transactional
     public SubCategory saveCategory(SubCategory category) {
-        // Phương thức này có thể dùng cho cả INSERT và UPDATE nếu bạn không cần logic kiểm tra
         return categoryRepository.save(category);
+    }
+
+    // Thêm mới hoặc Cập nhật (trả DTO)
+    @Transactional
+    public CategoryResponse saveCategoryResponse(SubCategory category) {
+        SubCategory saved = categoryRepository.save(category);
+        return CategoryResponse.from(saved);
     }
 
     // Xóa Category
     @Transactional
     public void deleteCategory(Long id) {
-        // Tùy chọn: Thêm kiểm tra findById trước khi xóa để đưa ra Exception nếu ID không tồn tại
         categoryRepository.deleteById(id);
     }
 
-    // --- Phương thức Cập nhật có kiểm tra và xử lý lỗi ---
-
+    // Cập nhật có kiểm tra và xử lý lỗi (entity)
     @Transactional
     public SubCategory updateCategory(SubCategory category) {
-        // 1. Tìm kiếm Category hiện tại bằng ID.
-        // Sử dụng orElseThrow để ném ra một ngoại lệ (Exception) nếu không tìm thấy.
-        // Đây là cách chuẩn để xử lý lỗi "Not Found" trong Service Layer.
         SubCategory existingCategory = categoryRepository.findById(category.getId())
                 .orElseThrow(() -> new RuntimeException("SubCategory not found with ID: " + category.getId()));
-        // Trong thực tế nên dùng một Custom Exception (ví dụ: ResourceNotFoundException)
-
-        // 2. Cập nhật các trường dữ liệu từ đối tượng mới
-        existingCategory.setName(category.getName());
-        existingCategory.setDescription(category.getDescription());
-        // Bổ sung các trường khác (ví dụ: SuperCategory, description) nếu cần cập nhật
-
-        // 3. Lưu lại đối tượng đã cập nhật (JpaRepository sẽ thực hiện UPDATE)
+        if (category.getName() != null)
+            existingCategory.setName(category.getName());
+        if (category.getDescription() != null)
+            existingCategory.setDescription(category.getDescription());
         return categoryRepository.save(existingCategory);
+    }
+
+    // Cập nhật và trả DTO
+    @Transactional
+    public CategoryResponse updateCategoryResponse(SubCategory category) {
+        SubCategory updated = updateCategory(category);
+        return CategoryResponse.from(updated);
     }
 
     @Transactional(readOnly = true)
     public Optional<SubCategory> getCategoryByName(String name) {
-        // Gọi phương thức Repository đã khai báo ở trên
         return categoryRepository.findByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CategoryResponse> getCategoryResponseByName(String name) {
+        return categoryRepository.findByName(name).map(CategoryResponse::from);
+    }
+
+    // Tìm các category có tên chứa text (case-insensitive) và trả DTO
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> searchCategoryResponses(String text) {
+        return categoryRepository.findByNameContainingIgnoreCase(text == null ? "" : text)
+                .stream()
+                .map(CategoryResponse::from)
+                .collect(Collectors.toList());
     }
 }
