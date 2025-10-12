@@ -12,7 +12,31 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: datnh.work@gmail.com
+    password: ahnw uusy hmid ghta
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    from: noreply@bookverse.app
 
 jwt:
   signerKey: quadeptrai8hIrNT3QZjFzSdzZ3YvFWhQyoV4HnOrMbcsrIKMgHMlVctgWscP2zi
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs        # OpenAPI JSON path (default)
+  swagger-ui:
+    path: /docs               # UI entry path (redirects to /swagger-ui/index.html)
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+
+
 

@@ -18,8 +18,12 @@ public class UserResponse {
     String id;
     String username;
     String password;
-    String name;
     String email;
-    LocalDate birthDate;
+    String name;
+    String phone;
+    String address;
+    String image;
+    boolean active;
+
     Set<String> roles; // Set of roles assigned to the user, e.g., "USER", "ADMIN", "MODERATOR", etc.
 }

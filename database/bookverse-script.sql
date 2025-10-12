@@ -107,15 +107,14 @@ create table user
 (
     id       varchar(36) charset utf8mb3 not null
         primary key,
-    username varchar(255)                null,
+    username varchar(255)                not null,
     password varchar(255)                not null,
-    email    varchar(255)                null,
-    fullname varchar(100)                null,
+    email    varchar(255)                not null,
+    fullname varchar(255)                null,
     phone    varchar(255)                null,
     address  varchar(255)                null,
     image    varchar(255)                null,
     active   tinyint(1)                  not null comment 'Active flag for the user (soft delete when set tinyint(0))',
-    name     varchar(255)                null,
     constraint email
         unique (email),
     constraint username

@@ -57,9 +57,16 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        // Configure endpoints and their access rules. If endpoints are not specified, all requests are authenticated by default.
+
+        // Define authorization rules for different endpoints and HTTP methods based on user roles and scopes in JWT
         httpSecurity.authorizeHttpRequests(request ->
                 request
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/docs"              // because springdoc.swagger-ui.path = /docs
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
