@@ -35,7 +35,8 @@ public class SecurityConfig {
 
     // Define endpoint access rules based on user roles and HTTP methods
     private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {""};
+
+    private final String[] PUBLIC_GET_ENDPOINTS = {"/api/notification/**"}; // moi add vao day
 
     private final String[] ADMIN_GET_ENDPOINTS = {"/users"};
     private final String[] ADMIN_POST_ENDPOINTS = {""};
