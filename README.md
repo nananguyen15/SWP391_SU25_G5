@@ -51,4 +51,4 @@
 # License
 This project is licensed under the MIT License – see the LICENSE.md file for details.
 
-⚡ Developed with ❤️ using Spring Boot, React, and MySQL
+⚡ Developed with ❤️ using Spring Boot, React, Docker, DataGrip and MySQL
