@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * This entity stores all notifications related to customers.
  */
 @Entity
-@Table(name = "notifications")
+@Table(name = "notification")
 @Getter
 @Setter
 @NoArgsConstructor

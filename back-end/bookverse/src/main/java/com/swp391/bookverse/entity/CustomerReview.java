@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @Package: com.swp391.bookverse.entity
  */
 @Entity
-@Table(name = "reviews")
+@Table(name = "review")
 @Data
 public class CustomerReview {
 
