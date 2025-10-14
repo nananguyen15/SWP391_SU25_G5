@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Entity
-@Table(name = "sup_category")
+@Table(name = "sup_categories")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
