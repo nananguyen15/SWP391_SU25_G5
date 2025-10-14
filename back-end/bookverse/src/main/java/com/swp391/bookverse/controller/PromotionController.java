@@ -17,7 +17,7 @@ import java.util.List;
  * @Author: NhaNT9324W
  */
 @RestController
-@RequestMapping("/promotions")
+@RequestMapping("/promotion")
 @RequiredArgsConstructor
 public class PromotionController {
 

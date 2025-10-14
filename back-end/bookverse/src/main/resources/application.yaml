@@ -10,7 +10,7 @@ spring:
     password: 12345
   jpa:
     hibernate:
-      ddl-auto:update           //update        validate
+      ddl-auto:update             //update        validate
     show-sql: true
 
 jwt:

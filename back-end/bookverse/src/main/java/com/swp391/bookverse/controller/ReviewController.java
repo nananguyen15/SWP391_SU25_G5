@@ -16,7 +16,7 @@ import java.util.List;
  * @Author: NhaNT9324W
  */
 @RestController
-@RequestMapping("/reviews") // k cần chữ API/ đâu vậy là đủ
+@RequestMapping("/review") // k cần chữ API/ đâu vậy là đủ
 @RequiredArgsConstructor
 public class ReviewController {
 

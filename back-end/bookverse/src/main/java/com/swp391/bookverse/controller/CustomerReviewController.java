@@ -18,7 +18,7 @@ import java.util.List;
  * @BaseURL: /customer-reviews
  */
 @RestController
-@RequestMapping("/customer-reviews")
+@RequestMapping("/customer-review")
 @RequiredArgsConstructor
 public class CustomerReviewController {
 
