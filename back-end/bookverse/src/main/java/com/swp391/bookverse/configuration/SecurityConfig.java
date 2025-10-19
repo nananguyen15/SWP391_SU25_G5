@@ -1,5 +1,8 @@
 package com.swp391.bookverse.configuration;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +29,8 @@ import java.nio.charset.StandardCharsets;
  * This class configures security settings, including JWT authentication.
  */
 @Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableWebSecurity
 public class SecurityConfig {
     // JWT signing key, used to sign and verify JWT tokens.
@@ -34,18 +39,19 @@ public class SecurityConfig {
     protected String SIGNER_KEY;
 
     // Define endpoint access rules based on user roles and HTTP methods
-    private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {""};
 
-    private final String[] ADMIN_GET_ENDPOINTS = {"/users"};
-    private final String[] ADMIN_POST_ENDPOINTS = {""};
-    private final String[] ADMIN_PUT_ENDPOINTS = {""};
-    private final String[] ADMIN_DELETE_ENDPOINTS = {""};
+    String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
+    String[] PUBLIC_GET_ENDPOINTS = {""};
 
-    private final String[] STAFF_GET_ENDPOINTS = {""};
-    private final String[] STAFF_POST_ENDPOINTS = {""};
-    private final String[] STAFF_PUT_ENDPOINTS = {""};
-    private final String[] STAFF_DELETE_ENDPOINTS = {""};
+    String[] ADMIN_GET_ENDPOINTS = {"/users"};
+    String[] ADMIN_POST_ENDPOINTS = {""};
+    String[] ADMIN_PUT_ENDPOINTS = {""};
+    String[] ADMIN_DELETE_ENDPOINTS = {""};
+
+    String[] STAFF_GET_ENDPOINTS = {""};
+    String[] STAFF_POST_ENDPOINTS = {""};
+    String[] STAFF_PUT_ENDPOINTS = {""};
+    String[] STAFF_DELETE_ENDPOINTS = {""};
 
 
     /**
@@ -67,7 +73,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/docs"              // because springdoc.swagger-ui.path = /docs
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 

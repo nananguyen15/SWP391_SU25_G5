@@ -8,6 +8,28 @@ create table author
     active bit          not null
 );
 
+create table otp_token
+(
+    id         bigint auto_increment
+        primary key,
+    code       varchar(6)   not null,
+    created_at datetime(6)  not null,
+    email      varchar(255) not null,
+    expires_at datetime(6)  not null,
+    token_type varchar(30)  not null,
+    used       bit          not null,
+    user_id    varchar(36)  null
+);
+
+create index IDXeads5ru9yk3keyn0vn9s1vyui
+    on otp_token (email);
+
+create index IDXoo1ko324ynywmil1wpq9oiyll
+    on otp_token (user_id, used, expires_at);
+
+create index IDXryp41v8x3qjb1dkv75fjkwu8u
+    on otp_token (email, used, expires_at);
+
 create table promotion
 (
     id            bigint auto_increment
@@ -44,7 +66,7 @@ create table sup_category
     id     int          not null
         primary key,
     name   varchar(255) null,
-    active tinyint(1)   not null
+    active bit          not null
 );
 
 create table sub_category
@@ -55,7 +77,7 @@ create table sub_category
     name        varchar(255) not null,
     description longtext     null,
     discount_id bigint       not null,
-    active      tinyint(1)   not null,
+    active      bit          not null,
     constraint FK8wpb5yj29ehdvislyp5vugp4v
         foreign key (sup_cat_id) references sup_category (id)
 );
@@ -73,7 +95,7 @@ create table book
     stock_quantity int default 0 null,
     published_date date          null,
     image          varchar(255)  null,
-    active         bit           null,
+    active         bit           not null,
     constraint book_ibfk_1
         foreign key (category_id) references sub_category (id)
             on delete set null,
@@ -114,7 +136,7 @@ create table user
     phone    varchar(255)                null,
     address  varchar(255)                null,
     image    varchar(255)                null,
-    active   tinyint(1)                  not null comment 'Active flag for the user (soft delete when set tinyint(0))',
+    active   tinyint(1)                  null,
     constraint email
         unique (email),
     constraint username

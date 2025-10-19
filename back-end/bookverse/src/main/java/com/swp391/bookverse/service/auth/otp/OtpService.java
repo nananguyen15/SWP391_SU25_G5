@@ -1,7 +1,17 @@
 package com.swp391.bookverse.service.auth.otp;
 
+import com.swp391.bookverse.dto.APIResponse;
+import com.swp391.bookverse.dto.request.auth.otp.SendByEmailRequest;
+import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
+import com.swp391.bookverse.dto.request.auth.otp.VerifyRequest;
 import com.swp391.bookverse.entity.auth.otp.OtpToken;
+import com.swp391.bookverse.exception.AppException;
+import com.swp391.bookverse.exception.ErrorCode;
 import com.swp391.bookverse.repository.auth.otp.OtpTokenRepository;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -12,22 +22,20 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+@Builder
+@RequiredArgsConstructor // Generates a constructor with required arguments for final fields.
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) // Sets the default access level for fields to private and makes them final.
 @Service
 public class OtpService {
-    private final JavaMailSender mailSender;
-    private final OtpTokenRepository repo;
-    private final SecureRandom rnd = new SecureRandom();
-    private final Duration ttl = Duration.ofMinutes(5);
-    private final int resendCooldownSec = 45;
-
-    public OtpService(JavaMailSender mailSender, OtpTokenRepository repo) {
-        this.mailSender = mailSender;
-        this.repo = repo;
-    }
+    JavaMailSender mailSender;
+    OtpTokenRepository repo;
+    SecureRandom rnd = new SecureRandom();
+    Duration ttl = Duration.ofMinutes(5);
+    int resendCooldownSec = 45;
 
     @Transactional
-    public void sendOtpByEmail(String email, String tokenType) {
-        String normEmail = email.trim().toLowerCase();
+    public APIResponse<?> sendOtpByEmail(SendByEmailRequest req) {
+        String normEmail = req.getEmail().trim().toLowerCase();
 
         repo.findTopByEmailAndUsedFalseOrderByCreatedAtDesc(normEmail).ifPresent(last -> {
             if (Instant.now().isBefore(last.getCreatedAt().plusSeconds(resendCooldownSec))) {
@@ -35,60 +43,127 @@ public class OtpService {
             }
         });
 
-        String code = gen6();
+        String code = gen6Digit();
         OtpToken t = new OtpToken();
         t.setEmail(normEmail);
         t.setUserId(null); // not linked yet
         t.setCode(code);
-        t.setTokenType(tokenType);
+        t.setTokenType(req.getTokenType());
         t.setCreatedAt(Instant.now());
         t.setExpiresAt(t.getCreatedAt().plus(ttl));
         repo.save(t);
 
-        sendEmail(normEmail, code);
-    }
-
-    @Transactional
-    public void sendOtpForUser(String userId, String email, String tokenType) {
-        String normEmail = email.trim().toLowerCase();
-        Optional<OtpToken> last = repo.findTopByUserIdAndUsedFalseOrderByCreatedAtDesc(userId);
-        if (last.isPresent() && Instant.now().isBefore(last.get().getCreatedAt().plusSeconds(resendCooldownSec))) {
-            throw new IllegalStateException("Please wait before requesting another code.");
+        try {
+            sendEmail(normEmail, code);
+        } catch (Exception e) {
+            // Rollback if email sending fails
+            throw new AppException(ErrorCode.EMAIL_INVALID);
         }
 
-        String code = gen6();
-        OtpToken t = new OtpToken();
-        t.setEmail(normEmail);
-        t.setUserId(userId);
-        t.setCode(code);
-        t.setTokenType(tokenType);
-        t.setCreatedAt(Instant.now());
-        t.setExpiresAt(t.getCreatedAt().plus(ttl));
-        repo.save(t);
+        return APIResponse.<Void>builder()
+                .code(200)
+                .message("OTP sent to email if it exists.")
+                .build();
 
-        sendEmail(normEmail, code);
     }
 
+//    @Transactional
+//    public APIResponse<?> sendOtpForUser(SendForUserRequest req) {
+//        String normEmail = req.getEmail().trim().toLowerCase();
+//        Optional<OtpToken> last = repo.findTopByUserIdAndUsedFalseOrderByCreatedAtDesc(req.getUserId());
+//        if (last.isPresent() && Instant.now().isBefore(last.get().getCreatedAt().plusSeconds(resendCooldownSec))) {
+//            throw new IllegalStateException("Please wait before requesting another code.");
+//        }
+//
+//        String code = gen6Digit();
+//        OtpToken t = new OtpToken();
+//        t.setEmail(normEmail);
+//        t.setUserId(req.getUserId());
+//        t.setCode(code);
+//        t.setTokenType(req.getTokenType());
+//        t.setCreatedAt(Instant.now());
+//        t.setExpiresAt(t.getCreatedAt().plus(ttl));
+//        repo.save(t);
+//
+//        sendEmail(normEmail, code);
+//
+//        return APIResponse.<Void>builder()
+//                .code(200)
+//                .message("OTP sent to email.")
+//                .build();
+//    }
+
     @Transactional
-    public boolean verify(String emailOrNull, String userIdOrNull, String code, String tokenType) {
+    public APIResponse<?> verify(VerifyRequest req) {
+        String emailOrNull = req.getEmail();
+        String userIdOrNull = req.getUserId();
+        String code = req.getCode();
+        String tokenType = req.getTokenType() == null ? "LOGIN" : req.getTokenType();
+
+        // Fetch the token based on userId or email
         OtpToken token = (userIdOrNull != null && !userIdOrNull.isBlank())
                 ? repo.findTopByUserIdAndUsedFalseOrderByCreatedAtDesc(userIdOrNull).orElse(null)
                 : repo.findTopByEmailAndUsedFalseOrderByCreatedAtDesc(emailOrNull.trim().toLowerCase()).orElse(null);
 
-        if (token == null) return false;
-        if (!tokenType.equals(token.getTokenType())) return false;
-        if (Instant.now().isAfter(token.getExpiresAt())) return false;
-        if (!token.getCode().equals(code)) return false;
+        // Check if token exists
+        if (token == null) {
+            return APIResponse.<Void>builder()
+                    .code(404)
+                    .message("OTP token not found.")
+                    .build();
+        }
 
-        token.setUsed(true);
-        repo.save(token);
-        return true;
+        // Validate token properties
+        if (!tokenType.equals(token.getTokenType())) {
+            return APIResponse.<Void>builder()
+                    .code(400)
+                    .message("Invalid token type.")
+                    .build();
+        }
+        if (Instant.now().isAfter(token.getExpiresAt())) {
+            return APIResponse.<Void>builder()
+                    .code(400)
+                    .message("OTP token has expired.")
+                    .build();
+        }
+        if (!token.getCode().equals(code)) {
+            return APIResponse.<Void>builder()
+                    .code(400)
+                    .message("Invalid OTP code.")
+                    .build();
+        }
+
+        // Mark token as used and save
+        try {
+            token.setUsed(true);
+            repo.save(token);
+        } catch (Exception e) {
+            return APIResponse.<Void>builder()
+                    .code(500)
+                    .message("Failed to verify OTP due to server error.")
+                    .build();
+        }
+
+        // Return success response
+        return APIResponse.<Void>builder()
+                .code(200)
+                .message("OTP verified successfully.")
+                .build();
     }
 
-    private String gen6() {
+    /**
+     * Generate a 6-digit OTP code
+     * @return String
+     */
+    private String gen6Digit() {
         return String.format("%06d", rnd.nextInt(1_000_000));
     }
 
+    /**
+     * Send OTP code to email
+     * @param to String
+     * @param code String
+     */
     private void sendEmail(String to, String code) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);

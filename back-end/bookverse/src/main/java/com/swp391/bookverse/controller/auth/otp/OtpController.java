@@ -1,13 +1,16 @@
 package com.swp391.bookverse.controller.auth.otp;
 
+import com.swp391.bookverse.dto.APIResponse;
+import com.swp391.bookverse.dto.request.auth.otp.SendByEmailRequest;
+import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
+import com.swp391.bookverse.dto.request.auth.otp.VerifyRequest;
 import com.swp391.bookverse.service.auth.otp.OtpService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-record SendByEmailReq(String email, String tokenType) {}
-record SendForUserReq(String userId, String email, String tokenType) {}
-record VerifyReq(String email, String userId, String code, String tokenType) {}
-
+/**
+ * @Author huangdat
+ */
 @RestController
 @RequestMapping("/api/otp")
 public class OtpController {
@@ -15,23 +18,34 @@ public class OtpController {
 
     public OtpController(OtpService svc) { this.svc = svc; }
 
+    /**
+     * Send OTP to email for a specific token type (default: LOGIN)
+     * @param req
+     * @return ResponseEntity
+     */
     @PostMapping("/send-by-email")
-    public ResponseEntity<?> sendByEmail(@RequestBody SendByEmailReq req) {
-        svc.sendOtpByEmail(req.email(), req.tokenType() == null ? "LOGIN" : req.tokenType());
-        return ResponseEntity.ok().build();
+    public APIResponse<?> sendByEmail(@RequestBody SendByEmailRequest req) {
+        return svc.sendOtpByEmail(req);
     }
 
-    @PostMapping("/send-for-user")
-    public ResponseEntity<?> sendForUser(@RequestBody SendForUserReq req) {
-        svc.sendOtpForUser(req.userId(), req.email(), req.tokenType() == null ? "LOGIN" : req.tokenType());
-        return ResponseEntity.ok().build();
-    }
+//    /**
+//     * Send OTP to email for a specific user and token type (default: LOGIN)
+//     * @param req
+//     * @return ResponseEntity
+//     */
+//    @PostMapping("/send-for-user")
+//    public ResponseEntity<?> sendForUser(@RequestBody SendForUserRequest req) {
+//        svc.sendOtpForUser(req);
+//        return ResponseEntity.ok().build();
+//    }
 
+    /**
+     * Verify OTP code for a user and token type (default: LOGIN)
+     * @param req
+     * @return ResponseEntity
+     */
     @PostMapping("/verify")
-    public ResponseEntity<?> verify(@RequestBody VerifyReq req) {
-        boolean ok = svc.verify(req.email(), req.userId(), req.code(),
-                req.tokenType() == null ? "LOGIN" : req.tokenType());
-        return ok ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body("Invalid or expired code.");
+    public ResponseEntity<?> verify(@RequestBody VerifyRequest req) {
+        return ResponseEntity.ok(svc.verify(req));
     }
 }

@@ -19,13 +19,14 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserController {
     UserService userService;
 
-    @PostMapping
+
+    @PostMapping("/create")
     public APIResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
         APIResponse<User> response = new APIResponse<>();
 
