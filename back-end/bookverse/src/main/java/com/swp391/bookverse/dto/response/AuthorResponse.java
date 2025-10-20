@@ -6,9 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 /**
  * @Author huangdat
  */
@@ -17,16 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE) // Set default access level for fields to private
-public class UserResponse {
+public class AuthorResponse {
     String id;
-    String username;
-    String password;
-    String email;
-    String name;
-    String phone;
-    String address;
     String image;
-    boolean active;
-
-    Set<String> roles; // Set of roles assigned to the user, e.g., "USER", "ADMIN", "MODERATOR", etc.
+    String name;
+    String bio;
+    Boolean active;
 }

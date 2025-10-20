@@ -28,6 +28,11 @@ public enum ErrorCode {
     EMAIL_INVALID(1007, "Invalid email address"),
     BIRTH_DATE_INVALID(1008, "Birth date must be in the past"),
 
+    // Custom error codes for author entity
+    AUTHOR_EXISTS(2001, "Author already exists"),
+    AUTHOR_NOT_FOUND(2002, "Author not found"),
+    NO_AUTHORS_STORED(2003, "No authors stored in database"),
+
     INVALID_KEY(99999, "Invalid message key provided")
     ;
 

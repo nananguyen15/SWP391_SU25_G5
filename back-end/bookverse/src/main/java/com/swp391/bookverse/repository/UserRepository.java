@@ -9,7 +9,6 @@ import java.util.Optional;
 /**
  * @Author huangdat
  */
-
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByUsername(String username);

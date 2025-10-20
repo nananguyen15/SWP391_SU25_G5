@@ -25,7 +25,6 @@ import java.util.List;
 public class UserController {
     UserService userService;
 
-
     @PostMapping("/create")
     public APIResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
         APIResponse<User> response = new APIResponse<>();
@@ -35,7 +34,7 @@ public class UserController {
        return response;
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public APIResponse<List<UserResponse>> getUsers(){
         System.out.println("Received request to get all users");
         APIResponse<List<UserResponse>> response = new APIResponse<>();

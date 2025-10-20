@@ -41,10 +41,10 @@ public class SecurityConfig {
     // Define endpoint access rules based on user roles and HTTP methods
 
     String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
-    String[] PUBLIC_GET_ENDPOINTS = {""};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/authors/get-all"};
 
-    String[] ADMIN_GET_ENDPOINTS = {"/users"};
-    String[] ADMIN_POST_ENDPOINTS = {""};
+    String[] ADMIN_GET_ENDPOINTS = {"api/users"};
+    String[] ADMIN_POST_ENDPOINTS = {"api/authors/create"};
     String[] ADMIN_PUT_ENDPOINTS = {""};
     String[] ADMIN_DELETE_ENDPOINTS = {""};
 
@@ -73,8 +73,10 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/docs"              // because springdoc.swagger-ui.path = /docs
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 
         // Configure ability to use form login and basic authentication
