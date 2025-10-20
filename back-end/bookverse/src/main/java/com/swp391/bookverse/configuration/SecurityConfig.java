@@ -41,11 +41,11 @@ public class SecurityConfig {
     // Define endpoint access rules based on user roles and HTTP methods
 
     String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
-    String[] PUBLIC_GET_ENDPOINTS = {"api/authors/get-all"};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/authors/**"};
 
-    String[] ADMIN_GET_ENDPOINTS = {"api/users"};
-    String[] ADMIN_POST_ENDPOINTS = {"api/authors/create"};
-    String[] ADMIN_PUT_ENDPOINTS = {""};
+    String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
+    String[] ADMIN_POST_ENDPOINTS = {"api/authors/**"};
+    String[] ADMIN_PUT_ENDPOINTS = {"api/authors/**"};
     String[] ADMIN_DELETE_ENDPOINTS = {""};
 
     String[] STAFF_GET_ENDPOINTS = {""};
@@ -77,6 +77,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 
         // Configure ability to use form login and basic authentication

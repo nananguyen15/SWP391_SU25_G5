@@ -2,6 +2,8 @@ package com.swp391.bookverse.controller;
 
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.AuthorCreationRequest;
+import com.swp391.bookverse.dto.request.AuthorUpdateRequest;
+import com.swp391.bookverse.dto.request.UserUpdateRequest;
 import com.swp391.bookverse.dto.response.AuthorResponse;
 import com.swp391.bookverse.dto.response.UserResponse;
 import com.swp391.bookverse.entity.Author;
@@ -37,4 +39,16 @@ public class AuthorController {
         response.setResult(authorService.getAuthors());
         return response;
     }
+
+    @GetMapping("/{authorId}")
+    public AuthorResponse getAuthor(@PathVariable("authorId") String authorId) {
+        return authorService.getAuthorById(authorId);
+    }
+
+    @PutMapping("/update/{authorId}")
+    public AuthorResponse updateAuthor(@PathVariable("authorId") Long authorId, @RequestBody @Valid AuthorUpdateRequest request) {
+        System.out.println("Received request to update user with ID: " + authorId);
+        return authorService.updateAuthor(authorId, request);
+    }
+
 }

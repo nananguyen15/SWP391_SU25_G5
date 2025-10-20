@@ -28,7 +28,7 @@ public class UserUpdateRequest {
     String email;
     @Size(max = 255, message = "FULLNAME_INVALID")
     String name;
-    @Pattern(regexp = "0[3-9]\\d{8,9}", message = "PHONE_INVALID") // Matches Vietnamese phone numbers
+    @Pattern(regexp = "0[3-9]\\d{8,9}", message = "PHONE_INVALID") // Matches Vietnamese phone numbers. E.g., 0912345678
     String phone;
     String address;
     String image;

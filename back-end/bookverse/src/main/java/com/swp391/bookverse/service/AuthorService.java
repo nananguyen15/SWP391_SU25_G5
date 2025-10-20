@@ -1,6 +1,8 @@
 package com.swp391.bookverse.service;
 
 import com.swp391.bookverse.dto.request.AuthorCreationRequest;
+import com.swp391.bookverse.dto.request.AuthorUpdateRequest;
+import com.swp391.bookverse.dto.request.UserUpdateRequest;
 import com.swp391.bookverse.dto.response.AuthorResponse;
 import com.swp391.bookverse.dto.response.UserResponse;
 import com.swp391.bookverse.entity.Author;
@@ -62,4 +64,24 @@ public class AuthorService {
         // Fetch all users from the repository
         return authorsResponses;
     }
+
+    /**
+     * Get author by ID
+     * @param authorId the ID of the author to retrieve
+     * @return AuthorResponse the response object containing author details
+     */
+    public AuthorResponse getAuthorById(String authorId) {
+        Author author = authorRepository.findById(Long.parseLong(authorId)).orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
+        return authorMapper.toAuthorResponse(author);
+    }
+
+    public AuthorResponse updateAuthor(Long id, AuthorUpdateRequest request) {
+        // fetch existing author from DB by ID. Throw exception if not found
+        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
+        authorMapper.updateAuthor(request, existingAuthor);
+
+
+        return authorMapper.toAuthorResponse(authorRepository.save(existingAuthor));
+    }
+
 }
