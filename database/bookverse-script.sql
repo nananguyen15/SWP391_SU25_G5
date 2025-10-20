@@ -56,7 +56,6 @@ create table series
         primary key,
     name        varchar(255) not null,
     description longtext     null,
-    image       varchar(255) null,
     active      bit          not null,
     author      varchar(255) null
 );
