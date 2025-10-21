@@ -48,16 +48,16 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/update/{userId}")
     public UserResponse updateUser(@PathVariable("userId") String userId, @RequestBody @Valid UserUpdateRequest request) {
         System.out.println("Received request to update user with ID: " + userId);
         return userService.updateUser(userId, request);
     }
 
-    @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable("userId") String userId) {
-        System.out.println("Received request to delete user with ID: " + userId);
-        userService.deleteUser(userId);
-        return "User with ID " + userId + " deleted successfully.";
-    }
+//    @DeleteMapping("/{userId}")
+//    public String deleteUser(@PathVariable("userId") String userId) {
+//        System.out.println("Received request to delete user with ID: " + userId);
+//        userService.deleteUser(userId);
+//        return "User with ID " + userId + " deleted successfully.";
+//    }
 }

@@ -33,6 +33,26 @@ public enum ErrorCode {
     AUTHOR_NOT_FOUND(2002, "Author not found"),
     NO_AUTHORS_STORED(2003, "No authors stored in database"),
 
+    // Custom error codes for book entity
+    BOOK_EXISTS(3001, "Book already exists"),
+    BOOK_NOT_FOUND(3002, "Book not found"),
+    NO_BOOKS_STORED(3003, "No books stored in database"),
+
+    // Custom error codes for publisher entity
+    PUBLISHER_EXISTS(4001, "Publisher already exists"),
+    PUBLISHER_NOT_FOUND(4002, "Publisher not found"),
+    NO_PUBLISHERS_STORED(4003, "No publishers stored in database"),
+
+    // Custom error codes for category entity
+    CATEGORY_EXISTS(5001, "Category already exists"),
+    CATEGORY_NOT_FOUND(5002, "Category not found"),
+    NO_CATEGORIES_STORED(5003, "No categories stored in database"),
+
+    // Custom error codes for sub-category entity
+    SUBCATEGORY_EXISTS(6001, "Sub-category already exists"),
+    SUBCATEGORY_NOT_FOUND(6002, "Sub-category not found"),
+    NO_SUBCATEGORIES_STORED(6003, "No sub-categories stored in database"),
+
     INVALID_KEY(99999, "Invalid message key provided")
     ;
 

@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SupCategory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     String name;

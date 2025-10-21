@@ -1,5 +1,6 @@
 package com.swp391.bookverse.dto.response;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE) // Set default access level for fields to private
-public class AuthorResponse {
+public class PublisherResponse {
     Long id;
-    String image;
+    @Column(nullable = false)
     String name;
-    String bio;
+    String address;
+    String image;
+    @Column(nullable = false)
     Boolean active;
 }
