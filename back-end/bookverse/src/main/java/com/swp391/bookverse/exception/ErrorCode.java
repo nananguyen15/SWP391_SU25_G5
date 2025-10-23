@@ -22,11 +22,13 @@ public enum ErrorCode {
     USER_NOT_FOUND(1002, "User not found"),
     NO_USERS_STORED(1003, "No users stored in database"),
 
+    // Validation error codes for user entity
     USERNAME_INVALID(1004, "Username must be at least 3 characters long"),
     PASSWORD_INVALID(1005, "Password must be at least 8 characters long"),
     NAME_INVALID(1006, "Name must be at least 3 characters long"),
     EMAIL_INVALID(1007, "Invalid email address"),
     BIRTH_DATE_INVALID(1008, "Birth date must be in the past"),
+    ROLE_NOT_FOUND(1009, "Role not found"),
 
     // Custom error codes for author entity
     AUTHOR_EXISTS(2001, "Author already exists"),
@@ -39,8 +41,8 @@ public enum ErrorCode {
     NO_BOOKS_STORED(3003, "No books stored in database"),
 
     // Custom error codes for publisher entity
-    PUBLISHER_EXISTS(4001, "Publisher already exists"),
-    PUBLISHER_NOT_FOUND(4002, "Publisher not found"),
+    PUBLISHER_EXISTS(4001, "PublisherController already exists"),
+    PUBLISHER_NOT_FOUND(4002, "PublisherController not found"),
     NO_PUBLISHERS_STORED(4003, "No publishers stored in database"),
 
     // Custom error codes for category entity

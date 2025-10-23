@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PublisherRepository extends JpaRepository<Publisher, Long> {
-
+    Publisher findByName(String name);
+    boolean existsByNameIgnoreCase(String name);
 }

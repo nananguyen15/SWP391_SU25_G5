@@ -28,7 +28,7 @@ public class BookUpdateRequest {
     @NotNull(message = "Author ID is required")
     Long authorId;
 
-    @NotNull(message = "Publisher ID is required")
+    @NotNull(message = "PublisherController ID is required")
     Long publisherId;
 
     @NotNull(message = "Category ID is required")

@@ -1,5 +1,6 @@
 package com.swp391.bookverse.dto.response;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,6 @@ import java.util.Set;
 public class UserResponse {
     String id;
     String username;
-    String password;
     String email;
     String name;
     String phone;

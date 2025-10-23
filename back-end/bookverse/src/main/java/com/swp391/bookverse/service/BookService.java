@@ -3,6 +3,7 @@ package com.swp391.bookverse.service;
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.BookCreationRequest;
 import com.swp391.bookverse.dto.request.BookUpdateRequest;
+import com.swp391.bookverse.dto.response.BookActiveResponse;
 import com.swp391.bookverse.dto.response.BookResponse;
 import com.swp391.bookverse.entity.Author;
 import com.swp391.bookverse.entity.Book;
@@ -37,7 +38,7 @@ public class BookService {
      * @return APIResponse containing the created book
      */
     public APIResponse<Book> createBook(BookCreationRequest request) {
-        if (bookRepository.existsByTitle(request.getTitle())) {
+        if (bookRepository.existsByTitleIgnoreCase(request.getTitle())) {
             throw new AppException(ErrorCode.BOOK_EXISTS);
         }
 
@@ -64,6 +65,52 @@ public class BookService {
         for (Book book : books) {
             BookResponse bookResponse = mapToBookResponse(book);
             bookResponses.add(bookResponse);
+        }
+
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    /**
+     * Get all books with active status true.
+     * @return APIResponse containing a list of BookResponse objects
+     */
+    public APIResponse<List<BookResponse>> getActiveBooks() {
+        if (bookRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        List<Book> books = bookRepository.findAll();
+        List<BookResponse> bookResponses = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getActive()) {
+                BookResponse bookResponse = mapToBookResponse(book);
+                bookResponses.add(bookResponse);
+            }
+        }
+
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    /**
+     * Get all books with active status false.
+     * @return APIResponse containing a list of BookResponse objects
+     */
+    public APIResponse<List<BookResponse>> getInactiveBooks() {
+        if (bookRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        List<Book> books = bookRepository.findAll();
+        List<BookResponse> bookResponses = new ArrayList<>();
+        for (Book book : books) {
+            if (!book.getActive()) {
+                BookResponse bookResponse = mapToBookResponse(book);
+                bookResponses.add(bookResponse);
+            }
         }
 
         response.setResult(bookResponses);
@@ -103,6 +150,26 @@ public class BookService {
         // Save updated book
         Book updatedBook = bookRepository.save(existingBook);
         return mapToBookResponse(updatedBook);
+    }
+
+    public APIResponse<BookActiveResponse> changeActiveBookById(Boolean isActive, Long bookId) {
+        Book existingBook = bookRepository.findById(bookId)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
+
+        existingBook.setActive(isActive);
+        bookRepository.save(existingBook);
+
+        APIResponse<BookActiveResponse> response = new APIResponse<>();
+        response.setResult(mapToBookActiveResponse(existingBook));
+        return response;
+    }
+
+    private BookActiveResponse mapToBookActiveResponse(Book book) {
+        return BookActiveResponse.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .active(book.getActive())
+                .build();
     }
 
     /**

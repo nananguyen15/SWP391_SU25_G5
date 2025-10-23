@@ -3,6 +3,7 @@ package com.swp391.bookverse.controller;
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.BookCreationRequest;
 import com.swp391.bookverse.dto.request.BookUpdateRequest;
+import com.swp391.bookverse.dto.response.BookActiveResponse;
 import com.swp391.bookverse.dto.response.BookResponse;
 import com.swp391.bookverse.entity.Book;
 import com.swp391.bookverse.service.BookService;
@@ -28,7 +29,7 @@ public class BookController {
         return response;
     }
 
-    @GetMapping("/get-all")
+    @GetMapping
     public APIResponse<List<BookResponse>> getBooks(){
         APIResponse<List<BookResponse>> response;
         response = bookService.getBooks();
@@ -36,14 +37,39 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public BookResponse getbook(@PathVariable("bookId") String bookId) {
+    public BookResponse getBook(@PathVariable("bookId") String bookId) {
         return bookService.getBookById(bookId);
+    }
+
+    @GetMapping("/active")
+    public APIResponse<List<BookResponse>> getActiveBooks(){
+        APIResponse<List<BookResponse>> response;
+        response = bookService.getActiveBooks();
+        return response;
+    }
+
+    @GetMapping("/inactive")
+    public APIResponse<List<BookResponse>> getInactiveBooks(){
+        APIResponse<List<BookResponse>> response;
+        response = bookService.getInactiveBooks();
+        return response;
+    }
+
+    @PutMapping("/active/{bookId}")
+    public APIResponse<BookActiveResponse> restoreBook(@PathVariable("bookId") Long bookId) {
+        return bookService.changeActiveBookById(true, bookId);
+    }
+
+    @PutMapping("/inactive/{bookId}")
+    public APIResponse<BookActiveResponse> deleteBook(@PathVariable("bookId") Long bookId) {
+        return bookService.changeActiveBookById(false, bookId);
     }
 
     @PutMapping("/update/{bookId}")
     public BookResponse updateBook(@PathVariable("bookId") Long bookId, @RequestBody @Valid BookUpdateRequest request) {
         return bookService.updateBook(bookId, request);
     }
+
 
 
 }

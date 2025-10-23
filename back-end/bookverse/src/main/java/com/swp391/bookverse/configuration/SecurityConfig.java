@@ -45,7 +45,7 @@ public class SecurityConfig {
 
     String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
     String[] ADMIN_POST_ENDPOINTS = {"api/authors/**", "api/books/**"};
-    String[] ADMIN_PUT_ENDPOINTS = {"api/authors/**" , "api/books/**"};
+    String[] ADMIN_PUT_ENDPOINTS = {"api/authors/**" , "api/books/**", "api/users/**"};
     String[] ADMIN_DELETE_ENDPOINTS = {""};
 
     String[] STAFF_GET_ENDPOINTS = {""};
